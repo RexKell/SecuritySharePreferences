@@ -1,6 +1,6 @@
 ﻿# SecuritySharePreferences
-使用AES加密sharePreferences的密钥和值值
-####引入
+使用AES加密sharePreferences的密钥和值
+#### 引入
 ```
 	allprojects {
 		repositories {
@@ -16,7 +16,7 @@
 	}
 ```
 
-
+#### 使用与sharePreferences 一样
 ```
        SecuritySharePreferences sp = new SecuritySharePreferences(context,FILE_NAME,
                 MODE);
