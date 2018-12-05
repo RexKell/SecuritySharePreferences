@@ -16,12 +16,12 @@ import java.util.Set;
 
 /**
  * Created by RexKell
- *功能：加密SharePreferences */
-public class SecuritySharePreferences implements SharedPreferences{
+ * 功能：加密SharePreferences
+ */
+public class SecuritySharePreferences implements SharedPreferences {
     private Context mContext;
     private SharedPreferences mSharePreferences;
-    private String mSignKey="";
-
+    private String mSignKey = "";
 
     public SecuritySharePreferences(Context context, String name, int mode) {
         mContext = context;
@@ -31,32 +31,38 @@ public class SecuritySharePreferences implements SharedPreferences{
             mSharePreferences = mContext.getSharedPreferences(name, mode);
         }
     }
-    public SecuritySharePreferences(Context context, String name, int mode,String signKey) {
+
+    public SecuritySharePreferences(Context context, String name, int mode, String signKey) {
         mContext = context;
-        mSignKey=signKey;
+        mSignKey = signKey;
         if (TextUtils.isEmpty(name)) {
             mSharePreferences = PreferenceManager.getDefaultSharedPreferences(context);
         } else {
             mSharePreferences = mContext.getSharedPreferences(name, mode);
         }
     }
+
     /**
      * 加密调用
      */
     private String encryptPreference(String plainText) {
-        return SharepreferencesEncryptUtil.getInstance(mContext,mSignKey).encrypt(plainText);
+        return SharepreferencesEncryptUtil.getInstance(mContext, mSignKey).encrypt(plainText);
     }
-    /**解密*/
+
+    /**
+     * 解密
+     */
     private String decryptPreference(String cipherText) {
-        return SharepreferencesEncryptUtil.getInstance(mContext,mSignKey).decrypt(cipherText);
+        return SharepreferencesEncryptUtil.getInstance(mContext, mSignKey).decrypt(cipherText);
     }
+
     @Override
     public Map<String, ?> getAll() {
-        Map<String,?> encryptMap=mSharePreferences.getAll();
-        Map<String,String> decryptMap=new HashMap<>();
-        for (Map.Entry<String,?> entry :encryptMap.entrySet()){
-            Object cipherText=entry.getValue();
-            if (cipherText!=null){
+        Map<String, ?> encryptMap = mSharePreferences.getAll();
+        Map<String, String> decryptMap = new HashMap<>();
+        for (Map.Entry<String, ?> entry : encryptMap.entrySet()) {
+            Object cipherText = entry.getValue();
+            if (cipherText != null) {
                 decryptMap.put(entry.getKey(), entry.getValue().toString());
             }
         }
@@ -139,28 +145,30 @@ public class SecuritySharePreferences implements SharedPreferences{
     public void unregisterOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
         mSharePreferences.unregisterOnSharedPreferenceChangeListener(listener);
     }
+
     /**
      * 自动加密Editor
-     * */
-    final  class SecurityEditor implements Editor{
+     */
+    final class SecurityEditor implements Editor {
         private Editor mEditor;
+
         public SecurityEditor() {
-            mEditor=mSharePreferences.edit();
+            mEditor = mSharePreferences.edit();
         }
 
         @Override
         public Editor putString(String key, String value) {
-            mEditor.putString(encryptPreference(key),encryptPreference(value));
+            mEditor.putString(encryptPreference(key), encryptPreference(value));
             return this;
         }
 
         @Override
         public Editor putStringSet(String key, Set<String> values) {
-            Set<String> encryptSet=new HashSet<>();
-            for (String value:values){
+            Set<String> encryptSet = new HashSet<>();
+            for (String value : values) {
                 encryptSet.add(encryptPreference(value));
             }
-            mEditor.putStringSet(encryptPreference(key),encryptSet);
+            mEditor.putStringSet(encryptPreference(key), encryptSet);
             return this;
         }
 
@@ -196,6 +204,7 @@ public class SecuritySharePreferences implements SharedPreferences{
 
         /**
          * Mark in the editor to remove all values from the preferences.
+         *
          * @return this
          */
         @Override
@@ -206,6 +215,7 @@ public class SecuritySharePreferences implements SharedPreferences{
 
         /**
          * 提交数据到本地
+         *
          * @return Boolean 判断是否提交成功
          */
         @Override
