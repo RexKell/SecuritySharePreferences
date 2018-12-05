@@ -1,5 +1,22 @@
 ﻿# SecuritySharePreferences
-使用AES加密sharePreferences 的key 和Value值
+使用AES加密sharePreferences的密钥和值值
+####引入
+```
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+      
+```
+```
+	dependencies {
+	        implementation 'com.github.RexKell:SecuritySharePreferences:master'
+	}
+```
+
+
 ```
        SecuritySharePreferences sp = new SecuritySharePreferences(context,FILE_NAME,
                 MODE);
